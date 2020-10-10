@@ -1,0 +1,31 @@
+﻿[ExtensionOf(classStr(RetailTransactionServiceEx))]
+final class RetailTransactionService_Extension
+{
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name = "_customerAccountNum"></param>
+    /// <param name = "_customerDataAreaId"></param>
+    /// <returns></returns>
+    public static container GetCustomerLoyaltyCard(str _customerAccountNum, str _customerDataAreaId)
+    {
+        boolean success = true;
+        str     errorMessage = "";
+        RetailLoyaltyCard retailLoyaltyCard;
+
+        if (_customerAccountNum && _customerDataAreaId)
+        {
+            CustTable custTable;
+
+            select firstonly retailLoyaltyCard
+                    order by retailLoyaltyCard.CardNumber
+                    join custTable
+                    where  retailLoyaltyCard.Party == custTable.Party
+                        && custTable.AccountNum == _customerAccountNum
+                        && custTable.DataAreaId == _customerDataAreaId;
+        }
+
+        return [success, errorMessage, retailLoyaltyCard.CardNumber];
+    }
+
+}
